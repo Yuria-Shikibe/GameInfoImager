@@ -161,6 +161,9 @@ public class EventListeners{
 		signDrawer.add(new DrawPair<>(unit -> true, unit -> drawFunc.get(T1, unit)));
 		
 		Events.on(EventType.WorldLoadEvent.class, e -> {
+			minBuildSize = Core.settings.getInt(NHPlugin.BUILDING_SIZE_FILTER, 1);
+			minUnitSize = Core.settings.getInt(NHPlugin.UNIT_SIZE_FILTER, 0);
+			
 			builds.clear();
 			units.clear();
 			
