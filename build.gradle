@@ -71,6 +71,12 @@ jar{
     }
 }
 
+task cpl{
+    dependsOn jar
+
+    def fi = new File("$rootDir/build/libs/NewHorizonModDesktop.jar")
+}
+
 task deploy(type : Jar){
     def fi = new File("$rootDir/mod.hjson")
     fi.withReader { reader ->

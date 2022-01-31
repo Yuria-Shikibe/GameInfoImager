@@ -1,4 +1,4 @@
-package newhorizon.expand.vars;
+package newhorizon.expand;
 
 import arc.Core;
 import arc.Events;
@@ -52,8 +52,6 @@ public class EventListeners{
 		Lines.lineAngle(entity.x(), entity.y(), 45, range);
 		Lines.circle(entity.x(), entity.y(), range);
 		Fill.circle(entity.x(), entity.y(), Lines.getStroke() * 1.3f);
-		
-//		Fill.light(entity.x(), entity.y(), Lines.circleVertices(range), range, Color.clear, c);
 	};
 	
 	public static class DrawPair<T>{
@@ -86,12 +84,12 @@ public class EventListeners{
 			new Vec2(0.6f, -0.45f),
 		},
 		T5_N = {
-			new Vec2(0.875f, 0),
-			new Vec2(0.375f, 0.5f),
-			new Vec2(-1.125f, 0.5f),
-			new Vec2(-0.625f, 0),
-			new Vec2(-1.125f, -0.5f),
-			new Vec2(0.375f, -0.5f)
+			new Vec2(0.1f, 0),
+			new Vec2(0.5f, 0.5f),
+			new Vec2(-1f, 0.5f),
+			new Vec2(-0.5f, 0),
+			new Vec2(-1f, -0.5f),
+			new Vec2(0.5f, -0.5f)
 		};
 		
 	public static final Cons2<Vec2[], Unit> drawFunc = ((vs, unit) -> {

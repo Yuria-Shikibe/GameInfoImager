@@ -9,7 +9,7 @@ import mindustry.mod.Mods;
 import mindustry.mod.Plugin;
 import newhorizon.content.NHPColor;
 import newhorizon.content.NHPShaders;
-import newhorizon.expand.vars.EventListeners;
+import newhorizon.expand.EventListeners;
 
 
 public class NHPlugin extends Plugin{
