@@ -27,28 +27,30 @@ public class NHPlugin extends Plugin{
 	public static int buildingShowMinSize = 1;
 	public static float unitShowMinSize = 1;
 	
+	public static boolean drawAlly, drawHighlight;
+	
 	public NHPlugin(){
 		Events.on(ClientLoadEvent.class, e -> {
 			Vars.ui.settings.graphics.checkPref(SETTING_KEY, true);
 			Vars.ui.settings.graphics.checkPref(DRAW_UNIT_SIGN, true);
 			
 			Vars.ui.settings.graphics.checkPref(SHOW_ALLY, true, c -> {
-				if(c){
-					NHPColor.ally.set(NHPColor.ally_copier);
-					NHPColor.ally2.set(NHPColor.ally2_copier);
-				}else{
-					NHPColor.ally.set(Color.clear);
-					NHPColor.ally2.set(Color.clear);
-				}
+				drawAlly = c;
+				
+				if(drawAlly)NHPColor.ally.set(NHPColor.ally_copier);
+				else NHPColor.ally.set(Color.clear);
+				
+				if(drawAlly && drawHighlight)NHPColor.ally2.set(NHPColor.ally2_copier);
+				else NHPColor.ally2.set(Color.clear);
 			});
 			Vars.ui.settings.graphics.checkPref(SHOW_HIGHLIGHT, true, c -> {
-				if(c){
-					NHPColor.ally2.set(NHPColor.ally2_copier);
-					NHPColor.hostile2.set(NHPColor.hostile2_copier);
-				}else{
-					NHPColor.ally2.set(Color.clear);
-					NHPColor.hostile2.set(Color.clear);
-				}
+				drawHighlight = c;
+				
+				if(drawHighlight)NHPColor.hostile2.set(NHPColor.hostile2_copier);
+				else NHPColor.hostile2.set(Color.clear);
+				
+				if(drawAlly && drawHighlight)NHPColor.ally2.set(NHPColor.ally2_copier);
+				else NHPColor.ally2.set(Color.clear);
 			});
 			
 			Vars.ui.settings.graphics.sliderPref(ALPHA, 60, 0, 100, 5, i -> i + "%");
@@ -64,20 +66,16 @@ public class NHPlugin extends Plugin{
 		NHPShaders.init();
 		EventListeners.load();
 		
-		if(Core.settings.getBool(SHOW_ALLY, true)){
-			NHPColor.ally.set(NHPColor.ally_copier);
-			NHPColor.ally2.set(NHPColor.ally2_copier);
-		}else{
-			NHPColor.ally.set(Color.clear);
-			NHPColor.ally2.set(Color.clear);
-		}
+		drawAlly = Core.settings.getBool(SHOW_ALLY, true);
+		drawHighlight = Core.settings.getBool(SHOW_HIGHLIGHT, true);
 		
-		if(Core.settings.getBool(SHOW_HIGHLIGHT, true)){
-			NHPColor.ally2.set(NHPColor.ally2_copier);
-			NHPColor.hostile2.set(NHPColor.hostile2_copier);
-		}else{
-			NHPColor.ally2.set(Color.clear);
-			NHPColor.hostile2.set(Color.clear);
-		}
+		if(drawAlly)NHPColor.ally.set(NHPColor.ally_copier);
+		else NHPColor.ally.set(Color.clear);
+		
+		if(drawHighlight)NHPColor.hostile2.set(NHPColor.hostile2_copier);
+		else NHPColor.hostile2.set(Color.clear);
+		
+		if(drawAlly && drawHighlight)NHPColor.ally2.set(NHPColor.ally2_copier);
+		else NHPColor.ally2.set(Color.clear);
 	}
 }

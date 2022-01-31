@@ -40,13 +40,11 @@ public class EventListeners{
 	public static final Cons3<Teamc, Float, Float> drawer = (entity, range, size) -> {
 		Color c = entity.team() == Vars.player.team() ? NHPColor.ally : NHPColor.hostile;
 		
-		if(c.a < 0.001f)return;
 		Fill.light(entity.x(), entity.y(), Lines.circleVertices(range), range, c, c);
 	};
 	
 	public static final Cons3<Teamc, Float, Float> drawer2 = (entity, range, size) -> {
 		Color c = entity.team() == Vars.player.team() ? NHPColor.ally2 : NHPColor.hostile2;
-		if(c.a < 0.001f)return;
 		
 		Draw.color(c);
 		
@@ -148,8 +146,8 @@ public class EventListeners{
 	
 	public static Interval timer = new Interval(2);
 	
-	public static final Boolf<Building> addBuilding = b -> b instanceof ReloadTurret.ReloadTurretBuild && b.isValid() && b.block.size >= minBuildSize;
-	public static final Boolf<Unit> addUnit = u -> u.isValid() &&u.hitSize() >= minBuildSize;
+	public static final Boolf<Building> addBuilding = b -> b instanceof ReloadTurret.ReloadTurretBuild && b.isValid() && ((NHPlugin.drawAlly && b.team == Vars.player.team()) || (!NHPlugin.drawAlly && b.team != Vars.player.team())) && b.block.size >= minBuildSize;
+	public static final Boolf<Unit> addUnit = u -> u.isValid() && ((NHPlugin.drawAlly && u.team == Vars.player.team()) || (!NHPlugin.drawAlly && u.team != Vars.player.team())) && u.hitSize() >= minBuildSize;
 	
 	public static void load(){
 		signDrawer.add(new DrawPair<>(unit -> unit.type.health > 12000, unit -> drawFunc.get(T5_N, unit)));
@@ -224,7 +222,7 @@ public class EventListeners{
 					Draw.flush();
 				});
 				
-				Draw.draw(Layer.light + 1.54f, () -> {
+				if(NHPlugin.drawHighlight)Draw.draw(Layer.light + 1.54f, () -> {
 					Draw.blend(Blending.additive);
 					Vars.renderer.effectBuffer.begin(Color.clear);
 					
