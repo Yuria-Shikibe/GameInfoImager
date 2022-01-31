@@ -1,6 +1,6 @@
-displayName: "Entity Range Drawer"
+displayName: "Weaponry Range Imager"
 author: "Yuria"
-name: "entity-range-drawer"
+name: "weapon-range-imager"
 main: "newhorizon.NHPlugin"
 description: "Show the range of turrets and units."
 version: "1.0"
