@@ -1,4 +1,4 @@
-# RangeDrawer
+# Range Imager
 Show the range of turrets and units.
 
 ## Feature
