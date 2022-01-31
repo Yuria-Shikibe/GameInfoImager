@@ -62,12 +62,12 @@ void main(){
             else if(maxed.b > 0.0)maxed = ALLY;
         }
 
-        maxed.a *= fall * (u_alpha * 3 + 1.0) / 2.2;
+        maxed.a *= fall * (u_alpha * 3.0 + 1.0) / 2.2;
 
         gl_FragColor = maxed;
     }else{
         gl_FragColor = color;
     }
 
-    gl_FragColor *= 1.12 + fall / 6;
+    gl_FragColor *= 1.12 + fall / 6.0;
 }
