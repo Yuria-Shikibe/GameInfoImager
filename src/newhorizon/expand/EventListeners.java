@@ -87,7 +87,7 @@ public class EventListeners{
 			new Vec2(0.6f, -0.45f),
 		},
 		T5_N = {
-			new Vec2(0.1f, 0),
+			new Vec2(1f, 0),
 			new Vec2(0.5f, 0.5f),
 			new Vec2(-1f, 0.5f),
 			new Vec2(-0.5f, 0),
