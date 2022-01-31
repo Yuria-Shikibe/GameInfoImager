@@ -73,12 +73,12 @@ public class EventListeners{
 		T1 = {new Vec2().trns(90, 1.65f), new Vec2().trns(90 + 120, 1.65f), new Vec2().trns(90 - 120, 1.65f)},
 		T2 = {new Vec2().trns(0, 1.65f), new Vec2().trns(90, 1.65f), new Vec2().trns(180, 1.65f), new Vec2().trns(270, 1.65f)},
 		T3 = {
-			new Vec2().trns(0, 1.65f),
-			new Vec2().trns(60, 1.65f),
-			new Vec2().trns(120, 1.65f),
-			new Vec2().trns(180, 1.65f),
-			new Vec2().trns(240, 1.65f),
-			new Vec2().trns(300, 1.65f)
+			new Vec2().trns(0  , 0.6f),
+			new Vec2().trns(60 , 0.6f),
+			new Vec2().trns(120, 0.6f),
+			new Vec2().trns(180, 0.6f),
+			new Vec2().trns(240, 0.6f),
+			new Vec2().trns(300, 0.6f)
 		},
 		T4 = {
 			new Vec2(1.4f, 0.45f),
