@@ -1,0 +1,9 @@
+displayName: "Entity Range Drawer"
+author: "Yuria"
+name: "entity-range-drawer"
+main: "newhorizon.NHPlugin"
+description: "Show the range of turrets and units."
+version: "1.0"
+hidden: "true"
+
+minGameVersion: 135
