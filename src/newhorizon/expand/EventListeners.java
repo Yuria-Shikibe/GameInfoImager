@@ -146,8 +146,8 @@ public class EventListeners{
 	
 	public static Interval timer = new Interval(2);
 	
-	public static final Boolf<Building> addBuilding = b -> b instanceof ReloadTurret.ReloadTurretBuild && b.isValid() && ((NHPlugin.drawAlly && b.team == Vars.player.team()) || (!NHPlugin.drawAlly && b.team != Vars.player.team())) && b.block.size >= minBuildSize;
-	public static final Boolf<Unit> addUnit = u -> u.isValid() && ((NHPlugin.drawAlly && u.team == Vars.player.team()) || (!NHPlugin.drawAlly && u.team != Vars.player.team())) && u.hitSize() >= minBuildSize;
+	public static final Boolf<Building> addBuilding = b -> b instanceof ReloadTurret.ReloadTurretBuild && b.isValid() && ((NHPlugin.drawAlly && b.team == Vars.player.team()) || b.team != Vars.player.team()) && b.block.size >= minBuildSize;
+	public static final Boolf<Unit> addUnit = u -> u.isValid() && ((NHPlugin.drawAlly && u.team == Vars.player.team()) || u.team != Vars.player.team()) && u.hitSize() >= minBuildSize;
 	
 	public static void load(){
 		signDrawer.add(new DrawPair<>(unit -> unit.type.health > 12000, unit -> drawFunc.get(T5_N, unit)));
