@@ -40,12 +40,13 @@ public class EventListeners{
 	public static final Cons3<Teamc, Float, Float> drawer = (entity, range, size) -> {
 		Color c = entity.team() == Vars.player.team() ? NHPColor.ally : NHPColor.hostile;
 		
-		
+		if(c.a < 0.001f)return;
 		Fill.light(entity.x(), entity.y(), Lines.circleVertices(range), range, c, c);
 	};
 	
 	public static final Cons3<Teamc, Float, Float> drawer2 = (entity, range, size) -> {
 		Color c = entity.team() == Vars.player.team() ? NHPColor.ally2 : NHPColor.hostile2;
+		if(c.a < 0.001f)return;
 		
 		Draw.color(c);
 		
