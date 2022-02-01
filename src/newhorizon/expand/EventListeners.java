@@ -111,7 +111,7 @@ public class EventListeners{
 		
 		float z = Draw.z();
 		Draw.z(z + 0.1f);
-		if(unit.health > 1000){
+		if(unit.type.health > 1000){
 			Font font = Fonts.outline;
 			GlyphLayout layout = Pools.obtain(GlyphLayout.class, GlyphLayout::new);
 			boolean ints = font.usesIntegerPositions();
