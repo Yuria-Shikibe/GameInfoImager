@@ -20,6 +20,7 @@ import arc.util.Tmp;
 import arc.util.pooling.Pools;
 import mindustry.Vars;
 import mindustry.game.EventType;
+import mindustry.game.Team;
 import mindustry.gen.Building;
 import mindustry.gen.Groups;
 import mindustry.gen.Teamc;
@@ -38,6 +39,7 @@ public class EventListeners{
 	public static final Rect viewport = new Rect();
 	
 	public static final Cons3<Teamc, Float, Float> drawer = (entity, range, size) -> {
+		if(entity.team() == Team.derelict)return;
 		boolean ally = entity.team() == Vars.player.team();
 		if(ally && !NHPlugin.drawAlly)return;
 		Color c = ally ? NHPColor.ally : NHPColor.hostile;
@@ -46,6 +48,7 @@ public class EventListeners{
 	};
 	
 	public static final Cons3<Teamc, Float, Float> drawer2 = (entity, range, size) -> {
+		if(entity.team() == Team.derelict)return;
 		boolean ally = entity.team() == Vars.player.team();
 		if(ally && !NHPlugin.drawAlly)return;
 		Color c = ally ? NHPColor.ally2 : NHPColor.hostile2;
@@ -96,6 +99,8 @@ public class EventListeners{
 		};
 		
 	public static final Cons2<Vec2[], Unit> drawFunc = ((vs, unit) -> {
+		if(unit.team() == Team.derelict)return;
+		
 		Draw.color(Pal.gray);
 		Lines.stroke(2.8f);
 		poly(vs, unit.x, unit.y, unit.hitSize() + 3);
