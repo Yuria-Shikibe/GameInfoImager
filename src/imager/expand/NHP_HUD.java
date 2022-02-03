@@ -1,4 +1,4 @@
-package newhorizon.expand;
+package imager.expand;
 
 import arc.Core;
 import arc.Events;
@@ -12,6 +12,8 @@ import arc.struct.ObjectIntMap;
 import arc.struct.Seq;
 import arc.util.Log;
 import arc.util.Tmp;
+import imager.NHPlugin;
+import imager.expand.ui.IconNumTable;
 import mindustry.Vars;
 import mindustry.content.StatusEffects;
 import mindustry.game.EventType;
@@ -21,8 +23,6 @@ import mindustry.gen.Tex;
 import mindustry.type.UnitType;
 import mindustry.ui.Styles;
 import mindustry.world.Tile;
-import newhorizon.NHPlugin;
-import newhorizon.expand.ui.IconNumTable;
 
 public class NHP_HUD{
 	public static Rect viewport = new Rect();

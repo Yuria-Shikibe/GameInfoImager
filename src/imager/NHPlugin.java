@@ -1,16 +1,16 @@
-package newhorizon;
+package imager;
 
 import arc.Core;
 import arc.Events;
 import arc.graphics.Color;
+import imager.content.NHPColor;
+import imager.content.NHPShaders;
+import imager.expand.EventListeners;
+import imager.expand.NHP_HUD;
 import mindustry.Vars;
 import mindustry.game.EventType.ClientLoadEvent;
 import mindustry.mod.Mods;
 import mindustry.mod.Plugin;
-import newhorizon.content.NHPColor;
-import newhorizon.content.NHPShaders;
-import newhorizon.expand.EventListeners;
-import newhorizon.expand.NHP_HUD;
 
 
 public class NHPlugin extends Plugin{

@@ -1,4 +1,4 @@
-package newhorizon.expand.ui;
+package imager.expand.ui;
 
 import arc.func.Intp;
 import arc.graphics.g2d.TextureRegion;

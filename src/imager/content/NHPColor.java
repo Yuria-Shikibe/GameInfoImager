@@ -1,4 +1,4 @@
-package newhorizon.content;
+package imager.content;
 
 import arc.graphics.Blending;
 import arc.graphics.Color;

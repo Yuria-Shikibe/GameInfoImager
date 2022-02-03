@@ -1,4 +1,4 @@
-package newhorizon.content;
+package imager.content;
 
 import arc.Core;
 import arc.files.Fi;
@@ -6,9 +6,9 @@ import arc.graphics.gl.Shader;
 import arc.scene.ui.layout.Scl;
 import arc.util.Time;
 import arc.util.Tmp;
+import imager.NHPlugin;
 import mindustry.graphics.Shaders;
 import mindustry.mod.Mods;
-import newhorizon.NHPlugin;
 
 public class NHPShaders{
 	public static Shader range, fader;

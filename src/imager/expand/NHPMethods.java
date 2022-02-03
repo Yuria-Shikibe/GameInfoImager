@@ -1,4 +1,4 @@
-package newhorizon.expand;
+package imager.expand;
 
 import arc.struct.ObjectIntMap;
 import mindustry.content.StatusEffects;

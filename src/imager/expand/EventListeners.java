@@ -1,4 +1,4 @@
-package newhorizon.expand;
+package imager.expand;
 
 import arc.Core;
 import arc.Events;
@@ -18,6 +18,9 @@ import arc.util.Interval;
 import arc.util.Log;
 import arc.util.Tmp;
 import arc.util.pooling.Pools;
+import imager.NHPlugin;
+import imager.content.NHPColor;
+import imager.content.NHPShaders;
 import mindustry.Vars;
 import mindustry.game.EventType;
 import mindustry.game.Team;
@@ -30,9 +33,6 @@ import mindustry.graphics.Pal;
 import mindustry.ui.Fonts;
 import mindustry.world.blocks.defense.turrets.BaseTurret;
 import mindustry.world.blocks.defense.turrets.ReloadTurret;
-import newhorizon.NHPlugin;
-import newhorizon.content.NHPColor;
-import newhorizon.content.NHPShaders;
 
 
 public class EventListeners{
