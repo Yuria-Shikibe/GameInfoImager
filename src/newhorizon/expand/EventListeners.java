@@ -165,6 +165,10 @@ public class EventListeners{
 		signDrawer.add(new DrawPair<>(unit -> unit.type.health > 400, unit -> drawFunc.get(T2, unit)));
 		signDrawer.add(new DrawPair<>(unit -> true, unit -> drawFunc.get(T1, unit)));
 		
+		Events.on(EventType.ClientLoadEvent.class, e -> {
+		
+		});
+		
 		Events.on(EventType.WorldLoadEvent.class, e -> {
 			minBuildSize = Core.settings.getInt(NHPlugin.BUILDING_SIZE_FILTER, 1);
 			minUnitSize = Core.settings.getInt(NHPlugin.UNIT_SIZE_FILTER, 0);

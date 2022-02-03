@@ -10,6 +10,7 @@ import mindustry.mod.Plugin;
 import newhorizon.content.NHPColor;
 import newhorizon.content.NHPShaders;
 import newhorizon.expand.EventListeners;
+import newhorizon.expand.NHP_HUD;
 
 
 public class NHPlugin extends Plugin{
@@ -24,6 +25,9 @@ public class NHPlugin extends Plugin{
 	
 	public static final String ALPHA = "nh-plugin-show-alpha";
 	
+	public static final String SHOW_WAVE_DETAILS = "nh-plugin-show-wave-details";
+	public static final String SHOW_WAVE_PER_LINE = "nh.ui.wave.unit-per-line";
+	
 	public static int buildingShowMinSize = 1;
 	public static float unitShowMinSize = 1;
 	
@@ -31,6 +35,9 @@ public class NHPlugin extends Plugin{
 	
 	public NHPlugin(){
 		Events.on(ClientLoadEvent.class, e -> {
+			Vars.ui.settings.game.checkPref(SHOW_WAVE_DETAILS, true);
+			Vars.ui.settings.game.sliderPref(SHOW_WAVE_PER_LINE, 10, 4, 20, 1, i -> "*" + i);
+			
 			Vars.ui.settings.graphics.checkPref(SETTING_KEY, true);
 			Vars.ui.settings.graphics.checkPref(DRAW_UNIT_SIGN, true);
 			
@@ -65,6 +72,7 @@ public class NHPlugin extends Plugin{
 		
 		NHPShaders.init();
 		EventListeners.load();
+		NHP_HUD.load();
 		
 		drawAlly = Core.settings.getBool(SHOW_ALLY, true);
 		drawHighlight = Core.settings.getBool(SHOW_HIGHLIGHT, true);
