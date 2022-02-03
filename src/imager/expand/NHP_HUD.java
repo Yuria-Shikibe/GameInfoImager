@@ -116,6 +116,10 @@ public class NHP_HUD{
 		});
 		
 		Events.on(EventType.WorldLoadEvent.class, e -> {
+			waveUpdated.each(t -> {
+				t.clear();
+				t.remove();
+			});
 			waveUpdated.clear();
 			
 			root.clear();
