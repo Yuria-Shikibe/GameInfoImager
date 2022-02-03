@@ -49,6 +49,8 @@ public class NHP_HUD{
 		int perLine = Core.settings.getInt(NHPlugin.SHOW_WAVE_PER_LINE) + 1;
 		
 		t.actions(Actions.fadeOut(0.4f), Actions.run(() -> {
+			
+			
 			t.clearChildren();
 			t.left();
 			t.defaults().growX().fillY().pad(3).left();
@@ -128,14 +130,12 @@ public class NHP_HUD{
 					Table shower = new Table(Tex.buttonEdge3){{
 						updateWaveShower(this);
 						touchable = Touchable.enabled;
-						
 						update(() -> {
 							Tmp.v1.set(Core.camera.project(tile.drawx(), tile.drawy()));
 							setPosition(Tmp.v1.x - width / 2, Tmp.v1.y - height / 2);
+							visible(() -> Core.settings.getBool(NHPlugin.SHOW_WAVE_INFO));
 							pack();
 						});
-						
-						
 					}};
 					waveUpdated.add(shower);
 					root.add(shower);

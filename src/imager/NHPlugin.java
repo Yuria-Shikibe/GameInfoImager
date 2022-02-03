@@ -25,6 +25,7 @@ public class NHPlugin extends Plugin{
 	
 	public static final String ALPHA = "nh-plugin-show-alpha";
 	
+	public static final String SHOW_WAVE_INFO = "nh-plugin-show-wave-info";
 	public static final String SHOW_WAVE_DETAILS = "nh-plugin-show-wave-details";
 	public static final String SHOW_WAVE_PER_LINE = "nh.ui.wave.unit-per-line";
 	
@@ -35,6 +36,7 @@ public class NHPlugin extends Plugin{
 	
 	public NHPlugin(){
 		Events.on(ClientLoadEvent.class, e -> {
+			Vars.ui.settings.game.checkPref(SHOW_WAVE_INFO, true);
 			Vars.ui.settings.game.checkPref(SHOW_WAVE_DETAILS, true);
 			Vars.ui.settings.game.sliderPref(SHOW_WAVE_PER_LINE, 10, 4, 20, 1, i -> "*" + i);
 			
