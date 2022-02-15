@@ -29,7 +29,6 @@ import mindustry.ui.Styles;
 public class UnitInfo extends Table{
 	public static final IntMap<Table> added = new IntMap<>();
 	protected static int lastID = -1, lastSize;
-	protected static final Seq<Unit> tmpSeq = new Seq<>();
 	
 	protected static final Vec2 pos = new Vec2();
 	protected static final Group root = new WidgetGroup();
@@ -126,6 +125,7 @@ public class UnitInfo extends Table{
 	
 	public synchronized static void update(){
 		if(Groups.unit.isEmpty())return;
+		Seq<Unit> tmpSeq = new Seq<>();
 		Groups.unit.copy(tmpSeq);
 		tmpSeq.sortComparing(Unit::id);
 		for(int i = tmpSeq.size - 1; i >= 0; i--){
