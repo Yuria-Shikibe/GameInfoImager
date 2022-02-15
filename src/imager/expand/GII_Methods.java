@@ -8,7 +8,7 @@ import mindustry.type.UnitType;
 
 import static mindustry.Vars.state;
 
-public class NHPMethods{
+public class GII_Methods{
 	public static float maxWaveHealth = 0;
 	public static float initialWaveShield = 0;
 	public static ObjectIntMap<UnitType> bosses = new ObjectIntMap<>();

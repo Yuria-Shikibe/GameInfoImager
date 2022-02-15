@@ -16,11 +16,14 @@ import arc.scene.ui.layout.Scl;
 import arc.struct.Seq;
 import arc.util.Interval;
 import arc.util.Log;
+import arc.util.TaskQueue;
 import arc.util.Tmp;
+import arc.util.async.Threads;
 import arc.util.pooling.Pools;
-import imager.NHPlugin;
+import imager.GII_Plugin;
 import imager.content.NHPColor;
 import imager.content.NHPShaders;
+import imager.expand.ui.UnitInfo;
 import mindustry.Vars;
 import mindustry.game.EventType;
 import mindustry.game.Team;
@@ -32,16 +35,16 @@ import mindustry.graphics.Layer;
 import mindustry.graphics.Pal;
 import mindustry.ui.Fonts;
 import mindustry.world.blocks.defense.turrets.BaseTurret;
-import mindustry.world.blocks.defense.turrets.ReloadTurret;
+import mindustry.world.blocks.defense.turrets.Turret;
 
 
-public class EventListeners{
+public class GII_EventListeners{
 	public static final Rect viewport = new Rect();
 	
 	public static final Cons3<Teamc, Float, Float> drawer = (entity, range, size) -> {
 		if(entity.team() == Team.derelict)return;
 		boolean ally = entity.team() == Vars.player.team();
-		if(ally && !NHPlugin.drawAlly)return;
+		if(ally && !GII_Plugin.drawAlly)return;
 		Color c = ally ? NHPColor.ally : NHPColor.hostile;
 		
 		Fill.light(entity.x(), entity.y(), Lines.circleVertices(range), range, c, c);
@@ -50,7 +53,7 @@ public class EventListeners{
 	public static final Cons3<Teamc, Float, Float> drawer2 = (entity, range, size) -> {
 		if(entity.team() == Team.derelict)return;
 		boolean ally = entity.team() == Vars.player.team();
-		if(ally && !NHPlugin.drawAlly)return;
+		if(ally && !GII_Plugin.drawAlly)return;
 		Color c = ally ? NHPColor.ally2 : NHPColor.hostile2;
 		
 		Draw.color(c);
@@ -145,8 +148,10 @@ public class EventListeners{
 		}
 	}
 	
-	public static final Seq<Building> builds = new Seq<>();
-	public static final Seq<Unit> units = new Seq<>();
+	public static Seq<Building> builds = new Seq<>();
+	public static Seq<Unit> units = new Seq<>();
+	public static final Seq<Building> buildsUTD = new Seq<>();
+	public static final Seq<Unit> unitsUTD = new Seq<>();
 	
 	public static int minBuildSize;
 	public static float minUnitSize;
@@ -155,7 +160,42 @@ public class EventListeners{
 	
 	public static Interval timer = new Interval(2);
 	
-	public static final Boolf<Building> addBuilding = b -> b instanceof ReloadTurret.ReloadTurretBuild && b.isValid() && b.block.size >= minBuildSize;
+	public static TaskQueue taskQueue = new TaskQueue();
+	public static Thread updateThread;
+	
+	public static void stop(){
+		if(updateThread != null){
+			updateThread.interrupt();
+			updateThread = null;
+		}
+		
+		taskQueue.clear();
+	}
+	
+	@SuppressWarnings("BusyWait")
+	public static void start(){
+		stop();
+		updateThread = Threads.daemon("Beacon Capture Calculator", () -> {
+			while(true){
+				try{
+					if(Vars.state.isPlaying()){
+						taskQueue.run();
+					}
+					
+					try{
+						Thread.sleep(3);
+					}catch(InterruptedException e){
+						//stop looping when interrupted externally
+						break;
+					}
+				}catch(Exception e){
+					Log.err(e);
+				}
+			}
+		});
+	}
+	
+	public static final Boolf<Building> addBuilding = b -> b instanceof Turret.TurretBuild && ((Turret.TurretBuild)b).hasAmmo() && b.isValid() && b.block.size >= minBuildSize;
 	public static final Boolf<Unit> addUnit = u -> u.isValid() && u.hitSize() >= minUnitSize * Vars.tilesize;
 	
 	public static void load(){
@@ -169,28 +209,47 @@ public class EventListeners{
 		
 		});
 		
-		Events.on(EventType.WorldLoadEvent.class, e -> {
-			minBuildSize = Core.settings.getInt(NHPlugin.BUILDING_SIZE_FILTER, 1);
-			minUnitSize = Core.settings.getInt(NHPlugin.UNIT_SIZE_FILTER, 0);
+		if(!Vars.headless)Events.on(EventType.WorldLoadEvent.class, e -> {
+			minBuildSize = Core.settings.getInt(GII_Plugin.BUILDING_SIZE_FILTER, 1);
+			minUnitSize = Core.settings.getInt(GII_Plugin.UNIT_SIZE_FILTER, 0);
 			
 			builds.clear();
 			units.clear();
 			
 			Groups.build.copy(builds).filter(addBuilding);
 			Groups.unit.copy(units).filter(addUnit);
+			
+			start();
+			
+			Core.app.post(UnitInfo::addBars);
 		});
 		
 		Events.run(EventType.Trigger.update, () -> {
-			if(!Vars.state.isPlaying())return;
+			if(Vars.state.isMenu())stop();
 			
-			if(timer.get(12f)){
-				units.clear();
-				Groups.unit.copy(units).filter(addUnit);
+			if(!Vars.state.isPlaying())return;
+			GII_Plugin.showHealthBar = Core.settings.getBool(GII_Plugin.SHOW_UNIT_HEALTH_BAR, true);
+			
+			if(timer.get(8f)){
+				taskQueue.post(() -> {
+					synchronized(unitsUTD){
+						unitsUTD.clear();
+						Groups.unit.copy(unitsUTD).filter(addUnit);
+						units = new Seq<>(unitsUTD);
+					}
+					
+					UnitInfo.update();
+				});
 			}
 			
-			if(timer.get(1, 600f)){
-				builds.clear();
-				Groups.build.copy(builds).filter(addBuilding);
+			if(timer.get(1, 30f)){
+				taskQueue.post(() -> {
+					synchronized(buildsUTD){
+						buildsUTD.clear();
+						Groups.build.copy(buildsUTD).filter(addBuilding);
+						builds = new Seq<>(buildsUTD);
+					}
+				});
 			}
 		});
 		
@@ -214,8 +273,8 @@ public class EventListeners{
 		});
 		
 		Events.run(EventType.Trigger.draw, () -> {
-			minBuildSize = Core.settings.getInt(NHPlugin.BUILDING_SIZE_FILTER, 1);
-			minUnitSize = Core.settings.getInt(NHPlugin.UNIT_SIZE_FILTER, 0);
+			minBuildSize = Core.settings.getInt(GII_Plugin.BUILDING_SIZE_FILTER, 1);
+			minUnitSize = Core.settings.getInt(GII_Plugin.UNIT_SIZE_FILTER, 0);
 			
 			Core.camera.bounds(viewport);
 			
@@ -225,8 +284,8 @@ public class EventListeners{
 				return viewport.overlaps(draw.x() - draw.range(), draw.y() - draw.range(), draw.range() * 2, draw.range() * 2);
 			});
 			
-			if(Core.settings.getBool(NHPlugin.SETTING_KEY, true)){
-				Draw.draw(Layer.light + 1.55f, () -> {
+			if(Core.settings.getBool(GII_Plugin.SETTING_KEY, true)){
+				Draw.draw(Layer.space + 10.55f, () -> {
 					Vars.renderer.effectBuffer.begin(Color.clear);
 					
 					us.each(entity -> drawer.get(entity, entity.range(), entity.hitSize()));
@@ -234,11 +293,9 @@ public class EventListeners{
 					
 					Vars.renderer.effectBuffer.end();
 					Vars.renderer.effectBuffer.blit(NHPShaders.range);
-					
-					Draw.flush();
 				});
 				
-				if(NHPlugin.drawHighlight)Draw.draw(Layer.light + 1.54f, () -> {
+				if(GII_Plugin.drawHighlight)Draw.draw(Layer.space + 10.54f, () -> {
 					Draw.blend(Blending.additive);
 					Vars.renderer.effectBuffer.begin(Color.clear);
 					
@@ -250,12 +307,12 @@ public class EventListeners{
 					Vars.renderer.effectBuffer.blit(NHPShaders.fader);
 					
 					Draw.blend();
-					
-					Draw.flush();
 				});
 			}
 			
-			if(Core.settings.getBool(NHPlugin.DRAW_UNIT_SIGN, true)){
+			Draw.blend();
+			
+			if(Core.settings.getBool(GII_Plugin.DRAW_UNIT_SIGN, true) && Vars.ui.hudfrag.shown){
 				Seq<Unit> us2 = us.copy().filter(draw -> viewport.overlaps(draw.x() - draw.hitSize(), draw.y() - draw.hitSize(), draw.hitSize() * 2, draw.hitSize() * 2));
 				
 				us2.each(unit -> {
@@ -273,6 +330,6 @@ public class EventListeners{
 		
 		Draw.reset();
 		
-		Log.info("Plugin EventListeners Added");
+		Log.info("Plugin GII_EventListeners Added");
 	}
 }

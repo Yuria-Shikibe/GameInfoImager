@@ -5,15 +5,15 @@ import arc.Events;
 import arc.graphics.Color;
 import imager.content.NHPColor;
 import imager.content.NHPShaders;
-import imager.expand.EventListeners;
-import imager.expand.NHP_HUD;
+import imager.expand.GII_EventListeners;
+import imager.expand.GII_HUD;
 import mindustry.Vars;
 import mindustry.game.EventType.ClientLoadEvent;
 import mindustry.mod.Mods;
 import mindustry.mod.Plugin;
 
 
-public class NHPlugin extends Plugin{
+public class GII_Plugin extends Plugin{
 	public static Mods.LoadedMod MOD;
 	public static final String SETTING_KEY = "nh-plugin-active";
 	public static final String DRAW_UNIT_SIGN = "nh-plugin-sign";
@@ -29,13 +29,19 @@ public class NHPlugin extends Plugin{
 	public static final String SHOW_WAVE_DETAILS = "nh-plugin-show-wave-details";
 	public static final String SHOW_WAVE_PER_LINE = "nh.ui.wave.unit-per-line";
 	
+	public static final String SHOW_UNIT_HEALTH_BAR = "nh.ui.wave.unit-health-bar";
+	
 	public static int buildingShowMinSize = 1;
 	public static float unitShowMinSize = 1;
 	
-	public static boolean drawAlly, drawHighlight;
+	public static boolean drawAlly, drawHighlight, showHealthBar;
 	
-	public NHPlugin(){
+	public GII_Plugin(){
 		Events.on(ClientLoadEvent.class, e -> {
+			
+			
+			
+			Vars.ui.settings.game.checkPref(SHOW_UNIT_HEALTH_BAR, true);
 			Vars.ui.settings.game.checkPref(SHOW_WAVE_INFO, true);
 			Vars.ui.settings.game.checkPref(SHOW_WAVE_DETAILS, true);
 			Vars.ui.settings.game.sliderPref(SHOW_WAVE_PER_LINE, 10, 4, 20, 1, i -> "*" + i);
@@ -73,9 +79,10 @@ public class NHPlugin extends Plugin{
 		MOD = Vars.mods.getMod(getClass());
 		
 		NHPShaders.init();
-		EventListeners.load();
-		NHP_HUD.load();
+		GII_EventListeners.load();
+		GII_HUD.load();
 		
+		showHealthBar = Core.settings.getBool(SHOW_UNIT_HEALTH_BAR, true);
 		drawAlly = Core.settings.getBool(SHOW_ALLY, true);
 		drawHighlight = Core.settings.getBool(SHOW_HIGHLIGHT, true);
 		

@@ -6,7 +6,7 @@ import arc.graphics.gl.Shader;
 import arc.scene.ui.layout.Scl;
 import arc.util.Time;
 import arc.util.Tmp;
-import imager.NHPlugin;
+import imager.GII_Plugin;
 import mindustry.graphics.Shaders;
 import mindustry.mod.Mods;
 
@@ -24,7 +24,7 @@ public class NHPShaders{
 						Core.camera.position.y - Core.camera.height / 2);
 				setUniformf("u_texsize", Core.camera.width, Core.camera.height);
 				setUniformf("u_invsize", 1f / Core.camera.width, 1f / Core.camera.height);
-				setUniformf("u_alpha", Core.settings.getInt(NHPlugin.ALPHA, 60) / 100f);
+				setUniformf("u_alpha", Core.settings.getInt(GII_Plugin.ALPHA, 60) / 100f);
 				
 				setUniformf("u_pos", Core.camera.position);
 //				else setUniformf("u_pos", Core.input.mouse().sub(Core.camera.width / 2f, Core.camera.height / 2));
@@ -53,7 +53,7 @@ public class NHPShaders{
 	}
 	
 	public static Fi getShaderFi(String file){
-		Mods.LoadedMod mod = NHPlugin.MOD;
+		Mods.LoadedMod mod = GII_Plugin.MOD;
 		
 		Fi shaders = mod.root.child("shaders");
 		if(shaders.exists()){
