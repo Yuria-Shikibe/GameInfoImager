@@ -237,9 +237,9 @@ public class GII_EventListeners{
 						Groups.unit.copy(unitsUTD).filter(addUnit);
 						units = new Seq<>(unitsUTD);
 					}
-					
-					UnitInfo.update();
 				});
+				
+				UnitInfo.update();
 			}
 			
 			if(timer.get(1, 30f)){
