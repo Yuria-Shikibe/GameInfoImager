@@ -51,8 +51,6 @@ public class GII_HUD{
 		int perLine = Core.settings.getInt(GII_Plugin.SHOW_WAVE_PER_LINE) + 1;
 		
 		t.actions(Actions.fadeOut(0.4f), Actions.run(() -> {
-			
-			
 			t.clearChildren();
 			t.left();
 			t.defaults().growX().fillY().pad(3).left();
@@ -64,7 +62,7 @@ public class GII_HUD{
 				}).fill();
 //				table.image().color(Color.lightGray).growX().height(3).pad(6);
 			}).padBottom(6).row();
-			if(willBeSpawn.size > 0){
+			if(willBeSpawn.size > 0 && Vars.state.wave < Vars.state.rules.winWave){
 				t.table(table -> {
 					int i = 0;
 					table.left();
@@ -131,7 +129,7 @@ public class GII_HUD{
 			
 			willBeSpawn = GII_Methods.willSpawnNextWave();
 			
-			if(Vars.state.rules.waves && Vars.spawner.getSpawns().any()){
+			if(Vars.state.rules.waves && Vars.spawner.getSpawns().any() && Vars.state.wave < Vars.state.rules.winWave){
 				for(Tile tile : Vars.spawner.getSpawns()){
 					Table shower = new Table(Tex.buttonEdge3){{
 						updateWaveShower(this);

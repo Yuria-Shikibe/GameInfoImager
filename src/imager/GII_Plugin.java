@@ -38,9 +38,7 @@ public class GII_Plugin extends Plugin{
 	
 	public GII_Plugin(){
 		Events.on(ClientLoadEvent.class, e -> {
-			
-			
-			
+		
 			Vars.ui.settings.game.checkPref(SHOW_UNIT_HEALTH_BAR, true);
 			Vars.ui.settings.game.checkPref(SHOW_WAVE_INFO, true);
 			Vars.ui.settings.game.checkPref(SHOW_WAVE_DETAILS, true);

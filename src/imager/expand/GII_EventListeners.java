@@ -14,17 +14,16 @@ import arc.math.geom.Rect;
 import arc.math.geom.Vec2;
 import arc.scene.ui.layout.Scl;
 import arc.struct.Seq;
-import arc.util.Interval;
-import arc.util.Log;
-import arc.util.TaskQueue;
-import arc.util.Tmp;
-import arc.util.async.Threads;
+import arc.util.*;
 import arc.util.pooling.Pools;
 import imager.GII_Plugin;
 import imager.content.NHPColor;
 import imager.content.NHPShaders;
+import imager.expand.ui.GII_Vars;
+import imager.expand.ui.PointerDraw;
 import imager.expand.ui.UnitInfo;
 import mindustry.Vars;
+import mindustry.core.World;
 import mindustry.game.EventType;
 import mindustry.game.Team;
 import mindustry.gen.Building;
@@ -175,7 +174,7 @@ public class GII_EventListeners{
 	@SuppressWarnings("BusyWait")
 	public static void start(){
 		stop();
-		updateThread = Threads.daemon("Beacon Capture Calculator", () -> {
+		updateThread = Threads.daemon("Scanner", () -> {
 			while(true){
 				try{
 					if(Vars.state.isPlaying()){
@@ -227,20 +226,28 @@ public class GII_EventListeners{
 		Events.run(EventType.Trigger.update, () -> {
 			if(Vars.state.isMenu())stop();
 			
-			if(!Vars.state.isPlaying())return;
+			if(!Vars.state.isGame())return;
+			Vec2 wp = Core.camera.unproject(Core.input.mouse());
+			GII_Vars.currentBuilding = Vars.world.build(World.toTile(wp.x), World.toTile(wp.y));
+			GII_Vars.currentUnit = null;
+			Groups.unit.intersect(wp.x - 2, wp.y - 2, 4, 4, u -> {
+				GII_Vars.currentUnit = u;
+			});
+			PointerDraw.update();
+			
 			GII_Plugin.showHealthBar = Core.settings.getBool(GII_Plugin.SHOW_UNIT_HEALTH_BAR, true);
 			
-			if(timer.get(8f)){
-				taskQueue.post(() -> {
-					synchronized(unitsUTD){
-						unitsUTD.clear();
-						Groups.unit.copy(unitsUTD).filter(addUnit);
-						units = new Seq<>(unitsUTD);
-					}
-				});
-				
-				UnitInfo.update();
-			}
+//			if(timer.get(12f)){
+//				taskQueue.post(() -> {
+//					synchronized(unitsUTD){
+//						unitsUTD.clear();
+//						Groups.unit.copy(unitsUTD).filter(addUnit);
+//						units = new Seq<>(unitsUTD);
+//					}
+//				});
+//
+//				UnitInfo.update();
+//			}
 			
 			if(timer.get(1, 30f)){
 				taskQueue.post(() -> {
@@ -273,6 +280,8 @@ public class GII_EventListeners{
 		});
 		
 		Events.run(EventType.Trigger.draw, () -> {
+			float z = Draw.z();
+			
 			minBuildSize = Core.settings.getInt(GII_Plugin.BUILDING_SIZE_FILTER, 1);
 			minUnitSize = Core.settings.getInt(GII_Plugin.UNIT_SIZE_FILTER, 0);
 			
@@ -283,6 +292,8 @@ public class GII_EventListeners{
 				BaseTurret.BaseTurretBuild draw = (BaseTurret.BaseTurretBuild)entity;
 				return viewport.overlaps(draw.x() - draw.range(), draw.y() - draw.range(), draw.range() * 2, draw.range() * 2);
 			});
+			
+			PointerDraw.draw();
 			
 			if(Core.settings.getBool(GII_Plugin.SETTING_KEY, true)){
 				Draw.draw(Layer.space + 10.55f, () -> {
@@ -326,9 +337,12 @@ public class GII_EventListeners{
 					}
 				});
 			}
+			
+			Draw.reset();
+			Draw.z(z);
 		});
 		
-		Draw.reset();
+		
 		
 		Log.info("Plugin GII_EventListeners Added");
 	}

@@ -47,8 +47,7 @@ public class UnitInfo extends Table{
 
 	public static Table healthTable(Unit unit){
 		return new Table(Styles.black3){{
-			UnitHealthBar bar = new UnitHealthBar(
-				unit, () -> Pal.lancerLaser, () -> Iconc.commandRally + " : " + (unit.shield() < 0 ? "SHIELD DOWNED" : (int)unit.shield()), unit::shield, () -> Math.max(unit.shield(), 100000)
+			UnitHealthBar bar = new UnitHealthBar(() -> Pal.lancerLaser, () -> Iconc.commandRally + " : " + (unit.shield() < 0 ? "SHIELD DOWNED" : (int)unit.shield()), unit::shield, () -> Math.max(unit.shield(), 100000)
 			);
 			bar.blinkable = true;
 			bar.rootColor = Color.royal;
@@ -56,9 +55,7 @@ public class UnitInfo extends Table{
 			bar.blinked = true;
 			add(bar).grow().padBottom(4f).row();
 			
-			UnitHealthBar bar2 = new UnitHealthBar(
-					unit, () -> unit.team.color, () -> Iconc.add + " : " + (unit.health() > 0 ? ((int)unit.health() + " / " + (int)unit.maxHealth()) : "Destroyed"), unit::healthf, () -> 1
-			);
+			UnitHealthBar bar2 = new UnitHealthBar(() -> unit.team.color, () -> Iconc.add + " : " + (unit.health() > 0 ? ((int)unit.health() + " / " + (int)unit.maxHealth()) : "Destroyed"), unit::healthf, () -> 1);
 			
 			bar2.blinkable = true;
 			bar2.blinkColor = Pal.redderDust;
@@ -154,14 +151,14 @@ public class UnitInfo extends Table{
 	}
 	
 	public static class UnitHealthBar extends DelaySlideBar{
-		public UnitHealthBar(Unit unit, Prov<Color> colorReal, Prov<CharSequence> info, Floatp valueGetter, Floatp maxValue){
+		public UnitHealthBar(Prov<Color> colorReal, Prov<CharSequence> info, Floatp valueGetter, Floatp maxValue){
 			super(colorReal, info, valueGetter, maxValue);
 			
 			fontScale = b -> Mathf.clamp(b.getHeight() / Fonts.outline.getData().lineHeight * b.scaleY * 0.85f, 0.001f, b.scaleY);
 		}
 		
 		public UnitHealthBar(Unit unit){
-			this(unit, () -> unit.team.color, () -> (int)unit.health() + " / " + (int)unit.maxHealth(), unit::healthf, () -> 1);
+			this(() -> unit.team.color, () -> (int)unit.health() + " / " + (int)unit.maxHealth(), unit::healthf, () -> 1);
 		}
 	}
 }
