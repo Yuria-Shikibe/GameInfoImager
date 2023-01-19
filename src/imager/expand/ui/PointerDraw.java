@@ -53,7 +53,7 @@ public class PointerDraw{
 							barArc.rootColor = NHPColor.lightSky;
 							barArc.blinkColor = NHPColor.lightSkyFront;
 							barArc.blinked = true;
-							add(barArc).grow().padBottom(1.5f).row();
+							add(barArc).grow().padBottom(2).row();
 						}
 						
 						UnitInfo.UnitHealthBar bar = new UnitInfo.UnitHealthBar(() -> Pal.lancerLaser, () -> Iconc.commandRally + " : " + (unit.shield() < 0 ? "SHIELD DOWNED" : (int)unit.shield()), unit::shield, () -> Math.max(unit.shield(), 100000));
@@ -62,7 +62,7 @@ public class PointerDraw{
 						bar.rootColor = Color.royal;
 						bar.blinkColor = Pal.lancerLaser;
 						bar.blinked = true;
-						add(bar).grow().padBottom(1.5f).row();
+						add(bar).grow().padBottom(2).row();
 						
 						UnitInfo.UnitHealthBar bar2 = new UnitInfo.UnitHealthBar(() -> unit.team.color, () -> Iconc.add + " : " + (unit.health() > 0 ? ((int)unit.health() + " / " + (int)unit.maxHealth()) : "Destroyed"), unit::healthf, () -> 1);
 						
@@ -79,7 +79,7 @@ public class PointerDraw{
 							Vec2 pos = Core.input.mouseScreen(unit.x, unit.y + unit.hitSize / 1.15f + 12);
 							setPosition(pos.x, pos.y, Align.top);
 							setSize(Mathf.clamp(unit.hitSize() * 3.5f, 150f, 280f) * Vars.renderer.getDisplayScale(), (22 + 11 * Mathf.num(finalShield != null)) * Vars.renderer.getDisplayScale());
-							margin(1.5f * Vars.renderer.getDisplayScale());
+							margin(2f * Vars.renderer.getDisplayScale());
 							
 							if(unit != cur && !hasActions()){
 								actions(Actions.fadeOut(0.25f), Actions.remove());
@@ -115,8 +115,8 @@ public class PointerDraw{
 						update(() -> {
 							Vec2 pos = Core.input.mouseScreen(unit.x, unit.y + unit.block.size * Vars.tilesize + 12);
 							setPosition(pos.x, pos.y, Align.top);
-							setSize(Mathf.clamp(unit.hitSize() * 3.5f, 150f, 250f) * Vars.renderer.getDisplayScale(), 11 * Vars.renderer.getDisplayScale());
-							margin(1.5f * Vars.renderer.getDisplayScale());
+							setSize(Mathf.clamp(unit.hitSize() * 3.5f, 150f, 250f) * Vars.renderer.getDisplayScale(), 13 * Vars.renderer.getDisplayScale());
+							margin(2f * Vars.renderer.getDisplayScale());
 							
 							if(unit != cur && !hasActions()){
 								actions(Actions.fadeOut(0.25f), Actions.remove());
