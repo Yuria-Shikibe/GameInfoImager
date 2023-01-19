@@ -76,7 +76,7 @@ public class PointerDraw{
 						
 						
 						update(() -> {
-							Vec2 pos = Core.input.mouseScreen(unit.x, unit.y + unit.hitSize / 1.15f + 8);
+							Vec2 pos = Core.input.mouseScreen(unit.x, unit.y + unit.hitSize / 1.15f + 12);
 							setPosition(pos.x, pos.y, Align.top);
 							setSize(Mathf.clamp(unit.hitSize() * 3.5f, 150f, 280f) * Vars.renderer.getDisplayScale(), (22 + 11 * Mathf.num(finalShield != null)) * Vars.renderer.getDisplayScale());
 							margin(1.5f * Vars.renderer.getDisplayScale());
@@ -89,7 +89,7 @@ public class PointerDraw{
 						touchable = Touchable.disabled;
 					}};
 					
-					Vec2 pos = Core.input.mouseScreen(unit.x, unit.y + unit.hitSize / 1.15f + 8);
+					Vec2 pos = Core.input.mouseScreen(unit.x, unit.y + unit.hitSize / 1.15f + 12);
 					table.setPosition(pos.x, pos.y, Align.top);
 					GII_HUD.root.addChild(table);
 					table.actions(Actions.fadeIn(0.125f));
@@ -102,7 +102,7 @@ public class PointerDraw{
 						color.a = 0;
 						
 						
-						UnitInfo.UnitHealthBar bar2 = new UnitInfo.UnitHealthBar(() -> unit.team.color, () -> Iconc.add + " : " + (unit.health() > 0 ? ((int)unit.health() + " / " + (int)unit.maxHealth()) : "Destroyed"), () -> unit.healthf(), () -> 1);
+						UnitInfo.UnitHealthBar bar2 = new UnitInfo.UnitHealthBar(() -> unit.team.color, () -> Iconc.add + " : " + (unit.health() > 0 ? ((int)unit.health() + " / " + (int)unit.maxHealth()) : "Destroyed"), unit::healthf, () -> 1);
 						
 						bar2.blinkable = true;
 						bar2.blinkColor = Pal.redderDust;
@@ -113,7 +113,7 @@ public class PointerDraw{
 //						add(Iconc.defense + "Armor: " + unit.block.armor);
 						
 						update(() -> {
-							Vec2 pos = Core.input.mouseScreen(unit.x, unit.y + unit.block.size * Vars.tilesize + 5);
+							Vec2 pos = Core.input.mouseScreen(unit.x, unit.y + unit.block.size * Vars.tilesize + 12);
 							setPosition(pos.x, pos.y, Align.top);
 							setSize(Mathf.clamp(unit.hitSize() * 3.5f, 150f, 250f) * Vars.renderer.getDisplayScale(), 11 * Vars.renderer.getDisplayScale());
 							margin(1.5f * Vars.renderer.getDisplayScale());
@@ -126,7 +126,7 @@ public class PointerDraw{
 						touchable = Touchable.disabled;
 					}};
 					
-					Vec2 pos = Core.input.mouseScreen(unit.x, unit.y + unit.block.size * Vars.tilesize + 5);
+					Vec2 pos = Core.input.mouseScreen(unit.x, unit.y + unit.block.size * Vars.tilesize + 12);
 					table.setPosition(pos.x, pos.y, Align.top);
 					GII_HUD.root.addChild(table);
 					table.actions(Actions.fadeIn(0.125f));
@@ -141,6 +141,7 @@ public class PointerDraw{
 		if(cur != null){
 			if(cur instanceof Unit){
 				Unit unit = (Unit)cur;
+				if(Vars.state.rules.fog && unit.inFogTo(Vars.player.team()))Draw.rect(unit.type.fullIcon, unit.x, unit.y, unit.rotation - 90);
 				for(GII_EventListeners.DrawPair<Unit> drawer : GII_EventListeners.signDrawer){
 					if(drawer.bool.get(unit)){
 						drawer.drawer.get(unit);
@@ -150,6 +151,7 @@ public class PointerDraw{
 				}
 			}else{
 				Building unit = (Building)cur;
+				if(Vars.state.rules.fog && unit.inFogTo(Vars.player.team()))Draw.rect(unit.block.fullIcon, unit.x, unit.y, unit.block.rotate ? unit.rotation * 90 : 0);
 				Drawf.square(unit.x, unit.y, (unit.block.size * Vars.tilesize) / (1.7f) + 1.5f, 45, unit.team.color);
 			}
 		}
